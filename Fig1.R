@@ -235,7 +235,7 @@ print(bars)
 ggsave(
   filename = paste0(file.path(path,"Visualizations/Population/bar"), ".svg"),
   plot = bars,
-  width = 5, height = 2,
+  width = 2.5, height = 2,
   device = svglite
 )
 
