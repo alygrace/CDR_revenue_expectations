@@ -55,17 +55,27 @@ ets_long <- etsf %>%
 
 ets_plot <- ggplot() +
   geom_line(
-    data = ets_long,
+    data = subset(ets_long, `Name of the initiative` != "EU ETS"),
     aes(
       x = x_scaled,
       y = value,
       group = `Name of the initiative`
     ),
-    color = "black",  
+    color = "black",
     linewidth = 0.4
   ) +
+  geom_line(
+    data = subset(ets_long, `Name of the initiative` == "EU ETS"),
+    aes(
+      x = x_scaled,
+      y = value,
+      group = `Name of the initiative`
+    ),
+    color = "black",
+    linewidth = 0.8
+  ) +
   geom_text_repel(
-    data = etsf,
+    data = subset(etsf, `Name of the initiative` != "EU ETS"),
     aes(x = 0.6, y = `2022`, label = `Name of the initiative`),
     direction = "y",
     hjust = 1,
@@ -76,7 +86,22 @@ ets_plot <- ggplot() +
     point.padding = 0.1,
     force = 1,
     max.overlaps = Inf,
-    size = 10 / .pt 
+    size = 10 / .pt
+  ) +
+  geom_text_repel(
+    data = subset(etsf, `Name of the initiative` == "EU ETS"),
+    aes(x = 0.6, y = `2022`, label = `Name of the initiative`),
+    direction = "y",
+    hjust = 1,
+    nudge_x = -0.05,
+    segment.size = 0.3,
+    segment.color = "gray40",
+    box.padding = 0.2,
+    point.padding = 0.1,
+    force = 1,
+    max.overlaps = Inf,
+    size = 10 / .pt,
+    fontface = "bold"
   ) +
   scale_y_continuous(limits = c(0, 400)) +
   coord_cartesian(xlim = c(-0.5, 1)) +
@@ -106,7 +131,6 @@ ggsave(
 # 4) Panel b: EU ETS price forecast
 # ------------------------------------------------------
 
-# Add X positions (fixed for all initiatives)
 eu <- eu %>%
   mutate(
     x_center = 0.5,
@@ -114,13 +138,13 @@ eu <- eu %>%
     x_right = 0.75,
     y_mid = `2030`,
     y_min = 135,
-    y_max = 226
-  ) %>%
-  mutate(segment_linetype = if_else(
-    str_detect(`Source`, regex("academic", ignore_case = TRUE)),
-    "dotted",
-    "longdash"
-  ))
+    y_max = 226,
+    source_type = if_else(
+      str_detect(Source, regex("academic", ignore_case = TRUE)),
+      "academic",
+      "other"
+    )
+  )
 
 eu_plot <- ggplot(eu) +
   geom_rect(aes(xmin = x_left, xmax = x_right, ymin = y_min, ymax = y_max),
@@ -128,9 +152,9 @@ eu_plot <- ggplot(eu) +
   geom_segment(aes(
     x = x_left, xend = x_right,
     y = y_mid, yend = y_mid,
-    linetype = segment_linetype
+    linetype = source_type  # mapped to a variable
   ),
-  color = "black",  # all lines black
+  color = "black", 
   linewidth = 1,
   show.legend = FALSE
   ) +
@@ -147,9 +171,12 @@ eu_plot <- ggplot(eu) +
     max.overlaps = Inf,
     size = 10 / .pt 
   ) +
-  scale_y_continuous( limits = c(0, 400)) +
+  scale_linetype_manual(values = c(
+    "academic" = "dotted",  
+    "other" = "dashed"    
+  )) +
   coord_cartesian(xlim = c(0, 2)) +
-  scale_linetype_identity() + 
+  scale_y_continuous(limits = c(0, 400)) +
   theme_minimal() +
   theme(
     axis.title = element_blank(),
