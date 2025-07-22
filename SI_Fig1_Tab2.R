@@ -17,7 +17,7 @@ library(cowplot)
 
 path <- ""
 
-data <- read_csv(file.path(path,"processed/full_data.csv"), show_col_types = FALSE)
+data <- read_csv(file.path(path,"data.csv"), show_col_types = FALSE)
 
 data_long <- data %>%
   select(!starts_with("Q") | matches("^Q2-\\d{4}\\s*_\\d+$")) %>%

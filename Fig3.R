@@ -19,12 +19,11 @@ library(svglite)
 
 path <- ""
 
-data <- read_csv(file.path(path, "processed/full_data.csv"), show_col_types = FALSE)
+data <- read_csv()
 
-ets <- read_delim(file.path(path, "RAW/ETS_data.csv"),
-                delim = ",", show_col_types = FALSE)
+ets <- read_delim()
 
-eu <- read_csv(file.path(path,"RAW/EUA prices 2024.csv"), show_col_types = FALSE)
+eu <- read_csv()
 
 # ------------------------------------------------------
 # 3) Panel a: Historic ETS prices
@@ -152,7 +151,7 @@ eu_plot <- ggplot(eu) +
   geom_segment(aes(
     x = x_left, xend = x_right,
     y = y_mid, yend = y_mid,
-    linetype = source_type  # mapped to a variable
+    linetype = source_type
   ),
   color = "black", 
   linewidth = 1,
@@ -211,7 +210,7 @@ data_subset$ETS_Price_2030_dollar <- as.numeric(data_subset$ETS_Price_2030_dolla
 #drop expectations if unclear with ETS 
 
 data_subset <- data_subset %>%
-  filter(!interview_ID %in% c("J05", "J13", "J17", "J20", "J25"))
+  filter(!interview_ID %in% c("5", "13", "17", "20", "25"))
 
 cdr_colors <- c(
   "Land-based biomass" = "#647314",

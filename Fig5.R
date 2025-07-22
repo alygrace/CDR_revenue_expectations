@@ -19,7 +19,7 @@ library(knitr)
 
 path <- ""
 
-data <- read_csv(file.path(path,"processed/full_data.csv"), show_col_types = FALSE)
+data <- read_csv(file.path(path,"data.csv"), show_col_types = FALSE)
 
 year_map <- c("1" = 2024, "2" = 2027, "3" = 2030, "4" = 2040, "5" = 2050)
 

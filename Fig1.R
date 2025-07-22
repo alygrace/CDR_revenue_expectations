@@ -23,8 +23,8 @@ library(svglite)
 
 path <- ""
 
-all <- read_csv(file.path(path,"RAW/interview_population.csv"),show_col_types = FALSE)
-data <- read_csv(file.path(path,"processed/full_data.csv"),show_col_types = FALSE)
+all <- read_csv()
+data <- read_csv()
 
 # Group mentioned HQ and project location countries into regions (Canada, United States, Europe, other OECD, non OECD)
 europe <- c(
